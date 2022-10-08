@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Post({ title, description, author, createdOn }) {
+export default function Todo({ title, description, author, createdOn }) {
   const [complete, setComplete] = useState();
   const [completedOn, setCompletedOn] = useState("");
 

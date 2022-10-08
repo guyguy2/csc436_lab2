@@ -6,14 +6,14 @@
 import { useReducer } from "react";
 
 import UserBar from "./user/UserBar";
-import PostList from "./post/PostList";
-import CreatePost from "./post/CreatePost";
+import TodoList from "./components/TodoList";
+import CreateTodo from "./components/CreateTodo";
 import { v4 as uuidv4 } from "uuid";
 
 import appReducer from "./reducers";
 
 function App() {
-  const initialPosts = [
+  const initialTodos = [
     {
       title: "ToDo Sample Item 1",
       description: "Some content",
@@ -34,15 +34,15 @@ function App() {
 
   const [state, dispatch] = useReducer(appReducer, {
     user: "",
-    posts: initialPosts,
+    todos: initialTodos,
   });
 
   return (
     <div>
       <UserBar user={state.user} dispatch={dispatch} />
-      <PostList posts={state.posts} />
+      <TodoList todos={state.todos} />
       {state.user && (
-        <CreatePost user={state.user} posts={state.posts} dispatch={dispatch} />
+        <CreateTodo user={state.user} todos={state.todos} dispatch={dispatch} />
       )}
     </div>
   );

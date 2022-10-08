@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
-export default function CreatePost({ user, dispatch }) {
+export default function CreateToDo({ user, dispatch }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
 
@@ -10,7 +10,7 @@ export default function CreatePost({ user, dispatch }) {
       onSubmit={(e) => {
         e.preventDefault();
         dispatch({
-          type: "CREATE_POST",
+          type: "CREATE_TODO",
           title,
           description,
           author: user,
