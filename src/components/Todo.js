@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-export default function Todo({ title, description, author, createdOn }) {
+export default function Todo({ todo, dispatch }) {
   const [complete, setComplete] = useState();
   const [completedOn, setCompletedOn] = useState("");
 
@@ -18,11 +18,11 @@ export default function Todo({ title, description, author, createdOn }) {
 
   return (
     <div>
-      <h3>{title}</h3>
-      <div>{description}</div>
+      <h3>{todo.title}</h3>
+      <div>{todo.description}</div>
       <br />
       <i>
-        Author <b>{author}</b>
+        Author <b>{todo.author}</b>
       </i>
       <br />
       <input
@@ -34,9 +34,20 @@ export default function Todo({ title, description, author, createdOn }) {
       ></input>
       <label for="completed">Completed</label>
       <br />
-      <i>Created {createdOn}</i> <br />
+      <i>Created {todo.createdOn}</i> <br />
       <i>Completed on {completedOn}</i>
       <br></br>
+      <p>
+        <button
+          type="button"
+          onClick={() => {
+            console.log("Delete button clicked");
+            dispatch({ type: "DELETE_TODO", id: todo.id });
+          }}
+        >
+          Delete
+        </button>
+      </p>
       <hr></hr>
     </div>
   );
