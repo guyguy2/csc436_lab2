@@ -1,0 +1,37 @@
+{
+  "todos": [
+    {
+      "title": "Test Todo",
+      "description": "test 1",
+      "author": "g@g.com",
+      "id": "89001c4a-316a-4eae-a4a2-7882856baad9",
+      "dateCreated": "Sun Nov 06 2022 09:43:53 GMT-0600 (Central Standard Time)",
+      "complete": false
+    },
+    {
+      "title": "Test Todo",
+      "description": "test 2",
+      "author": "g@g.com",
+      "id": "e2d5c8ea-4f0b-425e-8fb7-783340dc89c6",
+      "dateCreated": "Sun Nov 06 2022 09:43:55 GMT-0600 (Central Standard Time)",
+      "complete": false
+    }
+  ],
+  "users": [
+    {
+      "email": "guy@test.test",
+      "password": "$2a$10$IOPd1l8WMx19/4XZSZ.6I.Q/qPLOOljVrnsF9ntaE9y8x1Iu3bXdm",
+      "id": 1
+    },
+    {
+      "email": "guy@test.test",
+      "password": "$2a$10$0j7kGKYDowd7E7qK4lCIVeS/EGzDtipsyAlYNGnG9Do5wbigqJQ4O",
+      "id": 2
+    },
+    {
+      "email": "g@g.com",
+      "password": "$2a$10$nU34aESlazZkvg4EXlHkoObrPSfXuoZke2gbQJtUzarQqHwpUoVfa",
+      "id": 3
+    }
+  ]
+}

@@ -1,49 +1,38 @@
-// TODO - Login, Registration, and Logout
-//A Todolist containing individual Todo items
-//A form to add new Todo to the Todolist.
-//checkbox, title, author, desc
-
-import { useReducer } from "react";
-
-import UserBar from "./user/UserBar";
+import { useReducer, useEffect } from "react";
 import TodoList from "./components/TodoList";
-import CreateTodo from "./components/CreateTodo";
-import { v4 as uuidv4 } from "uuid";
-
+import UserBar from "./user/UserBar";
 import appReducer from "./reducers";
+import { StateContext } from "./contexts";
+import CreateTodo from "./components/CreateTodo";
+import { useResource } from "react-request-hook";
 
 function App() {
-  const initialTodos = [
-    {
-      title: "ToDo Sample Item 1",
-      description: "Some content",
-      author: "Guy",
-      createdOn: new Date().toLocaleString(),
-      completedOn: "",
-      id: uuidv4(),
-    },
-    {
-      title: "ToDo Sample Item 2",
-      description: "Some content",
-      author: "Guy",
-      createdOn: new Date().toLocaleString(),
-      completedOn: "",
-      id: uuidv4(),
-    },
-  ];
+  const [todos, getTodos] = useResource(() => ({
+    url: "/todos",
+    method: "get",
+  }));
+
+  useEffect(getTodos, []);
+
+  useEffect(() => {
+    if (todos && todos.data) {
+      dispatch({ type: "FETCH_TODOS", todos: todos.data.reverse() });
+    }
+  }, [todos]);
 
   const [state, dispatch] = useReducer(appReducer, {
     user: "",
-    todos: initialTodos,
+    todos: [],
   });
 
   return (
     <div>
-      <UserBar user={state.user} dispatch={dispatch} />
-      <TodoList todos={state.todos} dispatch={dispatch} />
-      {state.user && (
-        <CreateTodo user={state.user} todos={state.todos} dispatch={dispatch} />
-      )}
+      <h1 style={{ color: "blue" }}>ToDo List</h1>
+      <StateContext.Provider value={{ state, dispatch }}>
+        <UserBar />
+        <TodoList />
+        {state.user && <CreateTodo />}
+      </StateContext.Provider>
     </div>
   );
 }

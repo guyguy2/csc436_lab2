@@ -1,53 +1,87 @@
-import { useState } from "react";
+import { useResource } from "react-request-hook";
+export default function Todo({
+  title,
+  description,
+  author,
+  dateCreated,
+  dispatch,
+  id,
+  complete,
+  dateCompleted,
+}) {
+  const [deleted, deleteTodo] = useResource((id) => ({
+    url: "/todos/" + id,
+    method: "DELETE",
+  }));
 
-export default function Todo({ todo, dispatch }) {
-  const [complete, setComplete] = useState();
-  const [completedOn, setCompletedOn] = useState("");
+  const [updated, updateTodo] = useResource(
+    (id, title, description, author, dateCreated, complete, dateCompleted) => ({
+      url: "/todos/" + id,
+      method: "PUT",
+      data: {
+        title: title,
+        description: description,
+        author: author,
+        dateCreated: dateCreated,
+        dateCompleted: dateCompleted,
+        complete,
+      },
+    })
+  );
 
-  function checkValue(e) {
-    let checked = e.target.checked;
-
-    if (checked === false) {
-      setComplete("true");
-      setCompletedOn("");
+  function toggleItem(id, title, description, author, dateCreated, complete) {
+    var d = Date(Date.now());
+    if (!complete) {
+      dateCompleted = d;
     } else {
-      setComplete("false");
-      setCompletedOn(new Date().toLocaleString());
+      dateCompleted = null;
     }
+    complete = !complete;
+    updateTodo(
+      id,
+      title,
+      description,
+      author,
+      dateCreated,
+      complete,
+      dateCompleted
+    );
+    dispatch({ type: "TOGGLE_TODO", id, dateCompleted, complete });
+  }
+
+  function deleteItem(id) {
+    console.log("Delete button clicked");
+    deleteTodo(id);
+    dispatch({ type: "DELETE_TODO", id });
   }
 
   return (
     <div>
-      <h3>{todo.title}</h3>
-      <div>{todo.description}</div>
+      <h3>{title}</h3>
+      <div>{description}</div>
       <br />
       <i>
-        Author <b>{todo.author}</b>
+        Author: <b>{author}</b>
       </i>
       <br />
-      <input
-        type="checkbox"
-        id="completed"
-        name="completed"
-        check={complete}
-        onChange={(e) => checkValue(e)}
-      ></input>
-      <label for="completed">Completed</label>
+      <i>Created {dateCreated}</i>
       <br />
-      <i>Created {todo.createdOn}</i> <br />
-      <i>Completed on {completedOn}</i>
-      <br></br>
-      <p>
-        <button
-          type="button"
-          onClick={() => {
-            console.log("Delete button clicked");
-            dispatch({ type: "DELETE_TODO", id: todo.id });
-          }}
-        >
-          Delete
-        </button>
-      </p>
+      <div>
+        <i>
+          <label>Completed?</label>
+        </i>
+        <input
+          type="checkbox"
+          checked={complete}
+          onClick={() =>
+            toggleItem(id, title, description, author, dateCreated, complete)
+          }
+          value={complete}
+        ></input>
+      </div>
+      <i>Completed on {dateCompleted}</i>
+      <br />
+      <button onClick={() => deleteItem(id)}>Delete</button>
       <hr></hr>
     </div>
   );

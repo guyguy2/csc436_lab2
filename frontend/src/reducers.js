@@ -10,29 +10,32 @@ function userReducer(state, action) {
   }
 }
 
-function todoReducer(state, action) {
+export function todosReducer(state, action) {
   switch (action.type) {
     case "CREATE_TODO":
       const newTodo = {
+        id: action.id,
         title: action.title,
         description: action.description,
         author: action.author,
-        id: action.id,
-        createdOn: action.createdOn,
-        completedOn: action.completedOn,
+        dateCreated: action.dateCreated,
       };
       return [newTodo, ...state];
     case "TOGGLE_TODO":
-      console.log("Toggle todo");
       return state.map((todo) => {
         if (todo.id === action.id) {
-          return { ...todo, complete: !todo.complete };
+          return {
+            ...todo,
+            dateCompleted: action.dateCompleted,
+            complete: action.complete,
+          };
         }
         return todo;
       });
     case "DELETE_TODO":
-      console.log("Delete todo");
       return state.filter((todo) => todo.id !== action.id);
+    case "FETCH_TODOS":
+      return action.todos.reverse();
     default:
       return state;
   }
@@ -41,6 +44,6 @@ function todoReducer(state, action) {
 export default function appReducer(state, action) {
   return {
     user: userReducer(state.user, action),
-    todos: todoReducer(state.todos, action),
+    todos: todosReducer(state.todos, action),
   };
 }
