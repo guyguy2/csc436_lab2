@@ -19,15 +19,21 @@ export default function Register() {
     setPasswordRepeat(evt.target.value);
   }
 
+  const [status, setStatus] = useState("");
+
   const [user, register] = useResource((username, password) => ({
-    url: "/users",
+    url: "auth/register",
     method: "post",
-    data: { email: username, password },
+    data: { username, password, passwordConfirmation: password },
   }));
 
   useEffect(() => {
-    if (user && user.data && user.data.user.email) {
-      dispatch({ type: "REGISTER", username: user.data.user.email });
+    if (user && user.isLoading === false && (user.data || user.error)) {
+      if (user.error) {
+        setStatus("Registration failed, please try again later.");
+      } else {
+        setStatus("Registration successful. You may now login.");
+      }
     }
   }, [user]);
 
@@ -71,6 +77,7 @@ export default function Register() {
           password !== passwordRepeat
         }
       />
+      <p>{status}</p>
     </form>
   );
 }

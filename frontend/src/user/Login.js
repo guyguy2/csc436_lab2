@@ -13,22 +13,22 @@ function Login() {
   }
 
   const [user, login] = useResource((username, password) => ({
-    url: "/login",
+    url: "auth/login",
     method: "post",
-    data: { email: username, password },
+    data: { username, password },
   }));
 
   useEffect(() => {
-    if (user?.error) {
-      setLoginFailed(true);
-      alert("Login Failed");
-    }
-    if (user && user.data) {
-      if (user.data.accessToken) {
-        setLoginFailed(false);
-        dispatch({ type: "LOGIN", username: user.data.user.email });
-      } else {
+    if (user && user.isLoading === false && (user.data || user.error)) {
+      if (user.error) {
         setLoginFailed(true);
+      } else {
+        setLoginFailed(false);
+        dispatch({
+          type: "LOGIN",
+          username: user.data.username,
+          access_token: user.data.access_token,
+        });
       }
     }
   }, [user]);

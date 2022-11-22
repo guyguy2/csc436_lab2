@@ -1,23 +1,29 @@
+import { useContext } from "react";
 import { useResource } from "react-request-hook";
+import { StateContext } from "../contexts";
+
 export default function Todo({
   title,
   description,
   author,
   dateCreated,
-  dispatch,
   id,
   complete,
   dateCompleted,
 }) {
+  const { state, dispatch } = useContext(StateContext);
+
   const [deleted, deleteTodo] = useResource((id) => ({
     url: "/todos/" + id,
     method: "DELETE",
+    headers: { Authorization: `${state.user.access_token}` },
   }));
 
   const [updated, updateTodo] = useResource(
     (id, title, description, author, dateCreated, complete, dateCompleted) => ({
       url: "/todos/" + id,
-      method: "PUT",
+      method: "PATCH",
+      headers: { Authorization: `${state.user.access_token}` },
       data: {
         title: title,
         description: description,
@@ -38,7 +44,7 @@ export default function Todo({
     }
     complete = !complete;
     updateTodo(
-      id,
+      author,
       title,
       description,
       author,
@@ -51,7 +57,7 @@ export default function Todo({
 
   function deleteItem(id) {
     console.log("Delete button clicked");
-    deleteTodo(id);
+    deleteTodo(author);
     dispatch({ type: "DELETE_TODO", id });
   }
 

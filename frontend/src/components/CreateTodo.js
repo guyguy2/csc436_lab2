@@ -13,11 +13,27 @@ export default function CreateTodo() {
 
   const [post, createTodo] = useResource(
     ({ title, description, author, id, dateCreated, complete }) => ({
-      url: "/todos",
+      url: "/todo",
       method: "post",
+      headers: { Authorization: `${state.user.access_token}` },
       data: { title, description, author, id, dateCreated, complete },
     })
   );
+
+  useEffect(() => {
+    if (post.isLoading === false && post.data) {
+      dispatch({
+        type: "CREATE_TODO",
+        title: post.data.title,
+        content: post.data.content,
+        id: post.data._id,
+        author: user.username,
+        completed: false,
+        completedOn: "",
+        login: user.username,
+      });
+    }
+  }, [post]);
 
   return (
     <form
@@ -32,21 +48,12 @@ export default function CreateTodo() {
           dateCreated: d,
           complete: false,
         });
-        dispatch({
-          type: "CREATE_TODO",
-          id: temp_id,
-          title,
-          description,
-          author: user,
-          dateCreated: d,
-          complete: false,
-        });
       }}
     >
       <div>
         <h3 style={{ color: "blue" }}>Create a new ToDo Item</h3>
         <b>Author: </b>
-        <b>{user}</b>
+        <b>{user.username}</b>
       </div>
       <div>
         <label htmlFor="create-title">

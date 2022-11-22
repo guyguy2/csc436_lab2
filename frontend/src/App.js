@@ -8,22 +8,29 @@ import { useResource } from "react-request-hook";
 
 function App() {
   const [todos, getTodos] = useResource(() => ({
-    url: "/todos",
+    url: "/todo",
     method: "get",
+    headers: { Authorization: `${state?.user?.access_token}` },
   }));
-
-  useEffect(getTodos, []);
-
-  useEffect(() => {
-    if (todos && todos.data) {
-      dispatch({ type: "FETCH_TODOS", todos: todos.data.reverse() });
-    }
-  }, [todos]);
 
   const [state, dispatch] = useReducer(appReducer, {
     user: "",
     todos: [],
   });
+
+  useEffect(() => {
+    if (state.user) {
+      getTodos();
+    }
+  }, [state?.user?.access_token]);
+
+  useEffect(getTodos, []);
+
+  useEffect(() => {
+    if (todos && todos.isLoading === false && todos.data) {
+      dispatch({ type: "FETCH_TODOS", todos: todos.data.todos.reverse() });
+    }
+  }, [todos]);
 
   return (
     <div>
